@@ -5,6 +5,7 @@ use sdl2::render::{WindowCanvas, Texture};
 mod GameLoop;
 mod Grid;
 mod Constants;
+mod input;
 
 fn main() -> Result<(), String> {
 

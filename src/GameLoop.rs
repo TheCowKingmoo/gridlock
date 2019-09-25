@@ -8,20 +8,27 @@ use sdl2::EventPump;
 
 use crate::Constants;
 use crate::Grid;
+use crate::input;
+use sdl2::event::EventType::MouseButtonUp;
 
 pub fn run_game_loop(mut event_pump: EventPump, canvas: &mut WindowCanvas, height: u32, width: u32 )  {
 
+    let mut idx = 0;
+
     let mut current_sel_idx = 0;
     let mut tile_grid = Grid::draw_grid( canvas, height, width );
+    let mut mouse_up = true;
 
     'running: loop {
 
         canvas.set_draw_color(Color::RGB(0, 0, 0));
         //canvas.clear();
 
-        let mut state;
+        let state = event_pump.mouse_state();
+
         for event in event_pump.poll_iter() {
             match event {
+                Event::MouseButtonUp { mouse_btn:MouseButton::Left, .. } => { idx = input::on_mouse_release( canvas, tile_grid.as_mut(), width, height, idx, state.x(), state.y() )} |
                 Event::Quit {..} |
                 Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
                     break 'running;
@@ -30,19 +37,6 @@ pub fn run_game_loop(mut event_pump: EventPump, canvas: &mut WindowCanvas, heigh
             }
         }
 
-        if event_pump.mouse_state().is_mouse_button_pressed(MouseButton::Left)  {
-            state = event_pump.mouse_state();
-            let idx = Grid::find_grid_index( state.x(), state.y(), width, height );
-
-            if current_sel_idx != idx  {
-                tile_grid[idx].selected = true;
-                canvas.set_draw_color(Constants::get_highlight_color());
-                canvas.draw_rect( tile_grid[idx].rect );
-                current_sel_idx = idx;
-                canvas.present();
-            }
-            println!("X = {:?}, Y = {:?}", state.x(), state.y());
-        }
         // The rest of the game loop goes here...
 
         //canvas.present();

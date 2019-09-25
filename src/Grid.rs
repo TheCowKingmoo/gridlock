@@ -52,17 +52,14 @@ pub fn draw_grid(canvas: &mut WindowCanvas, h: u32, w: u32 ) -> Vec<Tile>  {
     for i in 0..Constants::NUM_OF_TILES_COL  {
         for j in 0..Constants::NUM_OF_TILES_ROW  {
 
-            let mut color = Color::RGB( 255, 255, 255 );
-
             //if i == 10 && j == 11 {
             //    color = Color::RGB( 0, 0, 255 );
             //    println!( " correct idx = {}", j + (i*NUM_OF_TILES_ROW) );
             //    println!("X = {} Y = {}", i * TILE_SIZE as usize, j * TILE_SIZE as usize);
             //}
 
-            //println!("{}",j + (i*NUM_OF_TILES_ROW));
-            tiles.push(Tile::new(i as i32 * Constants::TILE_SIZE as i32 , j as i32 * Constants::TILE_SIZE as i32, color ));
-            canvas.set_draw_color( color );
+            tiles.push(Tile::new(i as i32 * Constants::TILE_SIZE as i32 , j as i32 * Constants::TILE_SIZE as i32, Constants::get_background_line_color() ));
+            canvas.set_draw_color( Constants::get_background_line_color() );
             canvas.draw_rect( tiles[j + (i*Constants::NUM_OF_TILES_ROW) ].rect );
             canvas.present();
         }
